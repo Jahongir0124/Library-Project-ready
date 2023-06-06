@@ -1,0 +1,81 @@
+<!-- @format -->
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+<style>
+  
+  .disabledbutton {
+    pointer-events: none;
+    color: yellow;
+ }
+</style>
+    {% block content %}
+
+    <div class="container">
+      <div class="row main">
+        <div class="col-lg-2 col-12">
+          <div class="left" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              {% for c in cat %}
+              <li class="my-2 liCategory">
+                <a class="category" href="{% url 'category' c.id %}">{{ c.name }}</a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          
+        </div>
+        <div class="col-lg-10 col-12">
+          <div class="container">
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for i in book_list %}
+               <div class="col">
+                <div class="card h-100">
+                  <img src="{{ i.photo.url }}" class="card-img-top" alt="atom" />
+                  <div class="card-body">
+                    <h3 class="card-title text-center">{{ i.name }}</h3>
+                    <p class="card-text">
+                      <h5 class="text-info text-center">{{ i.price }}</h5>
+                    </p>
+                    <div class="card-footer">
+                      <a href="{% url 'unique_slug' i.slug %}" class="btn btn-primary w-100"><i class="fa fa-exclamation"></i>{% translate 'Подробнее' %}</a>                      
+                    </div>
+                  </div>
+                 <div class="feedback" style="text-align: center;">
+                  {% if request.user.is_authenticated %}
+                    <a type="button" style="text-align: center;"> <i  value="{{ i.id }}" class="fa fa-heart tuska" style="font-size:32px;color:rgb(179, 113, 113);text-align: center; margin-bottom: 15px;"></i></a>
+                    <span id="fcount" value="{{ i.id }}" style="font-size: 22px;">{{ i.fedback }}</span>
+                  {% else %}
+                  <a style="text-align: center;"><i  value="{{ i.id }}" class="fa fa-heart" style="font-size:32px;color:rgb(179, 113, 113);text-align: center; margin-bottom: 15px;"></i></a>
+                  <span id="fcount" value="{{ i.id }}" style="font-size: 22px;">{{ i.fedback }}</span>
+                  {% endif %}
+                 </div>
+                </div>
+              </div>
+            {% endfor %}
+            
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> 
+  <nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center p-5">
+      {% if page_obj.has_previous %}
+            <li class="page-item ">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}" >{% translate 'Предыдущий' %}</a>
+            </li>
+       {% endif %}
+    <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+    <li class="page-item"><a class="page-link" href="?page=2">2</a></li>
+       {% if page_obj.has_next %}
+          <li class="page-item">
+             <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% translate 'Следущий' %}</a>
+         </li>
+       {% endif %}
+  </ul>
+</nav> 
+{% endblock %}
+
+

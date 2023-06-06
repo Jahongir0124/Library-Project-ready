@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Registratsiyadan o'tish</title>
+  <link rel="stylesheet" href="{% static 'css/RegStyle.css' %}" />
+</head>
+
+<body>
+  <form method='POST'>
+    <div class="container my-4">
+      <h1>Sign Up</h1>
+      <p>Ro'yxatdan o'tish uchun ushbu formani to'ldiring</p>
+
+      {% csrf_token %}
+      {{ form.as_p }}
+        <button type="submit" class="btn">Ro'yxatdan o'tish</button>
+      </div>
+    </div>
+  </form>
+  {% if messages %}
+  {% for message in messages %}
+       <div class="alert alert-danger" role="alert">
+           {{ message }}
+       </div>
+   {% endfor %}
+{% endif %}
+</body>
+
+</html>

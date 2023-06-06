@@ -1,0 +1,292 @@
+<!-- @format -->
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% translate 'О книге' %}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/commet.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+
+      <div class="menu w-100 navbar-dark bg-primary">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}"
+              ><i class="fa fa-book" style="font-size: 36px"></i
+            ></a>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a
+                    class="nav-link active"
+                    aria-current="page"
+                    href="{% url 'home' %}"
+                    >{% translate 'Главная' %}</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'new' %}">{% translate 'Новые книги' %}</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'discount' %}">{% translate 'Скидки' %}</a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    id="navbarDropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    {% translate 'Профиль' %}
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                     {% if request.user.is_authenticated %}
+                          <li>
+                            <a class="dropdown-item" href="{% url 'profile' %}"
+                              >{{ request.user }}</a
+                            >
+                          </li>
+                          <li>
+                            <a class="dropdown-item" href="{% url 'logout' %}"
+                              >{% translate 'Выйти'%}</a
+                            >
+                          </li>
+                      {% else %}
+                          <li>
+                            <a class="dropdown-item" href="{% url 'login' %}"
+                              >{% translate 'Вход' %}</a
+                            >
+                          </li>
+                      {% endif %}
+                  </ul>
+                </li>
+              </ul>
+              <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {% translate 'Язык' %}
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDarkDropdownMenuLink">
+            {% get_current_language as LANGUAGE_CODE %}
+                {% get_available_languages as LANGUAGES %}
+                {% get_language_info_list for LANGUAGES as languages %}
+                    {% for language in languages %}
+                        {% if language.code == 'ru' %}
+                         <li><a class="dropdown-item" href="{% url 'set_language' language.code %}">{{ language.name_local }}</a></li>
+                        {% else %}
+                         <li><a class="dropdown-item" href="{% url 'set_language' language.code %}">{{ language.name_local }}</a></li>
+                        {% endif %}
+                     {% endfor %}
+            <!-- <li><a class="dropdown-item" href="#">O'zbek</a></li>
+            <li><a class="dropdown-item" href="#">Русский</a></li> -->
+          </ul>
+        </li>
+      </ul>
+    </div>
+              <form class="d-flex" method="GET" action="{% url 'search' %}">
+                <input
+                  id="searchTxt"
+                  class="form-control me-2"
+                  type="search"
+                  name="q"
+                  placeholder="{% translate 'Поиск' %}"
+                  aria-label="Search"
+                />
+                <input
+                  id="btnnn"
+                  class="btn btn-outline-light disabled"
+                  type="submit"
+                  value="{% translate 'Поиск' %}"
+                />
+              </form>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row main">
+        
+        <div class="box row">
+          <div class="col-lg-4 col-12">
+            <div>
+              <img
+                class="img-fluid p-5"
+                src="{{ book_info.photo.url }}"
+                alt="xaloskor"
+              />
+            </div>
+          </div>
+          <div class="col-lg-8 col-12 py-5">
+            <h3>
+              {% translate 'Имя' %}:
+              <span>{{ book_info.name }}</span>
+            </h3>
+            <h3>
+              {% translate 'Автор'%}:
+              <span>{{ book_info.author }}</span>
+            </h3>
+            <p>
+              <h3>{% translate 'Информация' %}:</h3>
+              <span>{{ book_info.description }}</span>
+            </p>
+            <h3 class="my-5">{% translate 'Цена'%}: <span>{{ b.price }}</span></h3>
+            <div class="pilusminus">
+              <div class="d-flex justify-content-between p-2">
+                <div id="increment-count">
+                  <input type="image" id="up-arrow" src="{% static 'img/plus-icon-21715.png' %}" style="width: 15px;"/>
+                </div>
+                <div id="total-count">
+                </div>
+                <div id="decrement-count">
+                  <input type="image" id="down-arrow" src="{% static 'img/icons8-minus-24.png' %}" />
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-primary w-50 my-5" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-cart-plus" aria-hidden="true"></i>{% translate 'Корзина' %}</button>
+            </div>
+          </div>
+          <!-- {% comment %} Modal {% endcomment %} -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{% translate 'Иинформация' %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>{% translate 'Имя' %}:{{ b.name }}</p>
+                    <p>{% translate 'Автор' %}:{{ b.author }}</p>
+                    <p>{% translate 'Цена'%}:{{ b.price }} so'm</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate 'Отмена' %}</button>
+                    <a id="btn_s" href="{% url 'order' book_info.id %}" type="button"  class="btn btn-primary">{% translate 'Купить' %}</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+        </div>
+        
+      </div>
+    </div>
+    <div class="container">
+<div class="be-comment-block">
+  <h1 class="comments-title">Izohlar:</h1>
+  <div class="btn-list">
+    <button id="btn-o" class="btn-o">Izohlarni ko'rish</button>
+    <button id="btn-c" class="btn-o">Yopish</button>
+  </div>
+  <div class="c-active">
+
+  {% for c in com %}
+    <div class="be-comment">
+      <div class="be-img-comment">  
+        <a href="blog-detail-2.html">
+          <img src="data:image/jpeg;base64,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" alt="" class="be-ava-comment">
+        </a>
+      </div>
+      <div class="be-comment-content">
+        
+          <span class="be-comment-name">
+            {{ c.username }}
+            </span>
+          <span class="be-comment-time">
+            <i class="fa fa-clock-o"></i>
+            {{ c.created_time }}
+          </span>
+  
+        <p class="be-comment-text">
+        {{ c.text }}
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+   
+  </div>
+    {% if request.user.is_authenticated %}
+  <form class="form-block" method="POST" action="{% url 'comment'%}">
+    {% csrf_token %}
+    <div class="row">
+      
+
+      <div class="col-xs-12">                 
+        <div class="form-group">
+          <input style="display: none" type=""  name="url" value="{{ url }}">
+          <input style="display: none" type=""  name="b_id" value="{{ book_info.id }}">
+          <textarea id="text_c" class="form-input" name="t" placeholder="Izoh qoldiring"></textarea>
+        </div>
+      </div>
+      <button type="submit" id="btn" class="btn btn-primary pull-right disabled">Jonatish</button>
+    </div>
+  </form>
+</div>
+</div>
+{% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Select increment and decrement buttons
+const incrementCount = document.getElementById("increment-count");
+const decrementCount = document.getElementById("decrement-count");
+
+// Select total count
+const totalCount = document.getElementById("total-count");
+
+// Variable to track count
+var count = 0;
+
+// Display initial count value
+totalCount.innerHTML = count;
+
+// Function to increment count
+const handleIncrement = () => {
+  count++;
+  totalCount.innerHTML = count;
+};
+
+// Function to decrement count
+const handleDecrement = () => {
+    count--;
+  totalCount.innerHTML = count;
+};
+
+// Add click event to buttons
+incrementCount.addEventListener("click", handleIncrement);
+decrementCount.addEventListener("click", handleDecrement);
+    </script>
+    <script src="{% static 'script-commet.js' %}"></script>
+  </body>
+</html>

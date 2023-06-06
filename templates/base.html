@@ -1,0 +1,183 @@
+<!-- @format -->
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% translate 'Главная' %}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+    crossorigin="anonymous"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+  />
+    <link rel="stylesheet" href="{% static 'css/home.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script
+      src="https://code.jquery.com/jquery-3.6.4.js"
+      integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
+      crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div class="menu w-100 navbar-dark bg-primary">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}"
+              ><i class="fa fa-book" style="font-size: 36px"></i
+            ></a>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a
+                    class="nav-link active"
+                    aria-current="page"
+                    href="{% url 'home' %}"
+                    >{% translate 'Главная' %}</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'new' %}">{% translate 'Новые книги' %}</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'discount' %}">{% translate 'Скидки' %}</a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    id="navbarDropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    {% translate 'Профиль' %}
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                     {% if request.user.is_authenticated %}
+                          <li>
+                            <a class="dropdown-item" href="{% url 'profile' %}"
+                              >{{ request.user }}</a
+                            >
+                          </li>
+                          <li>
+                            <a class="dropdown-item" href="{% url 'logout' %}"
+                              >{% translate 'Выйти'%}</a
+                            >
+                          </li>
+                      {% else %}
+                          <li>
+                            <a class="dropdown-item" href="{% url 'login' %}"
+                              >{% translate 'Вход' %}</a
+                            >
+                          </li>
+                      {% endif %}
+                  </ul>
+                </li>
+              </ul>
+              <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {% translate 'Язык' %}
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDarkDropdownMenuLink">
+            {% get_current_language as LANGUAGE_CODE %}
+                {% get_available_languages as LANGUAGES %}
+                {% get_language_info_list for LANGUAGES as languages %}
+                    {% for language in languages %}
+                        {% if language.code == 'ru' %}
+                         <li><a class="dropdown-item" href="{% url 'set_language' language.code %}">{{ language.name_local }}</a></li>
+                        {% else %}
+                         <li><a class="dropdown-item" href="{% url 'set_language' language.code %}">{{ language.name_local }}</a></li>
+                        {% endif %}
+                     {% endfor %}
+            <!-- <li><a class="dropdown-item" href="#">O'zbek</a></li>
+            <li><a class="dropdown-item" href="#">Русский</a></li> -->
+          </ul>
+        </li>
+      </ul>
+    </div>
+              <form class="d-flex" method="GET" action="{% url 'search' %}">
+                <input
+                  id="searchTxt"
+                  class="form-control me-2"
+                  type="search"
+                  name="q"
+                  placeholder="{% translate 'Поиск' %}"
+                  aria-label="Search"
+                />
+                <input
+                  id="btnnn"
+                  class="btn btn-outline-light disabled"
+                  type="submit"
+                  value="{% translate 'Поиск' %}"
+                />
+              </form>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+    
+    {% if messages %}
+      <ul class="messages">
+          {% for message in messages %}
+              <div id="knl" class="alert alert-primary" role="alert">
+                  {{ message }}
+              </div>
+          {% endfor %}
+      </ul>
+  {% endif %}
+  {% block content %}
+  {% endblock %}
+ <!--  <nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center p-5">
+      {% if page_obj.has_previous %}
+            <li class="page-item ">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}" >Oldingi</a>
+            </li>
+       {% endif %}
+    <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+    <li class="page-item"><a class="page-link" href="?page=2">2</a></li>
+       {% if page_obj.has_next %}
+          <li class="page-item">
+             <a class="page-link" href="?page={{ page_obj.next_page_number }}">Keyingi</a>
+         </li>
+       {% endif %}
+  </ul>
+</nav>  -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="{% static 'script.js' %}"></script>
+    <script src="{% static 'js/ajax.js' %}"></script>
+  </body>
+</html>
